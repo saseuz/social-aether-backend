@@ -1,70 +1,90 @@
-# Aether Social Backend
+# 🌌 Aether Social Backend
 
-Aether Social Backend is a Laravel-based API server powering a modern social experience with:
-- user registration and token-based authentication
-- profiles, follows, and user suggestions
-- posts with likes, bookmarks, reposts, and threaded comments
-- notifications for likes, comments, replies, follows, and reposts
-- trending hashtag discovery
-- Filament-ready admin support and Vite asset tooling
+[![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-blue.svg)](https://php.net/)
+[![Laravel](https://img.shields.io/badge/Laravel-%5E13.8-FF2D20.svg?logo=laravel)](https://laravel.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> A robust, Laravel-based API server powering a modern social experience. Aether provides everything needed for a full-featured social network, including token-based authentication, threaded comments, social graphs, and real-time trending discovery.
 
 ---
 
-## Tech stack
+## 📖 Table of Contents
 
-- PHP ^8.3
-- Laravel Framework ^13.8
-- Laravel Sanctum for API authentication
-- Filament for admin UI and panel support
-- Vite + Tailwind CSS for frontend asset processing
-- PHPUnit for automated testing
-
----
-
-## Features
-
-- Auth: register, login, profile fetch, update profile, password change
-- Social graph: follow / unfollow other users, follow suggestions
-- Feed: fetch all posts with nested repost, comment, like, bookmark state
-- Post actions: create posts, like, bookmark, repost
-- Comments: create comments and threaded replies
-- Notifications: fetch, create, mark read, delete, clear all
-- Trends: detect hashtag popularity across posts
+- [Tech Stack](#-tech-stack)
+- [Core Features](#-core-features)
+- [Prerequisites](#-prerequisites)
+- [Getting Started](#-getting-started)
+  - [Quick Setup](#quick-setup)
+  - [Environment Configuration](#environment-configuration)
+  - [Running Locally](#running-locally)
+- [API Reference](#-api-reference)
+  - [Example Request](#example-request)
+- [Database Architecture](#-database-architecture)
+- [Development Commands](#-development-commands)
+- [License](#-license)
 
 ---
 
-## Requirements
+## 🛠 Tech Stack
 
-- PHP 8.3+
-- Composer
-- Node.js 18+ / npm
-- A database supported by Laravel (SQLite, MySQL, PostgreSQL)
+- **Core:** PHP ^8.3, Laravel Framework ^13.8
+- **Authentication:** Laravel Sanctum (Token-based API auth)
+- **Admin Interface:** Filament (Ready for admin panel support)
+- **Frontend Tooling:** Vite + Tailwind CSS (Asset processing)
+- **Testing:** PHPUnit (Automated testing)
 
 ---
 
-## Quick setup
+## ✨ Core Features
 
-```bash
-cd /home/zypp/code/aether-social-workspace/social-app-backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-npm install
-npm run build
-```
+- **🔐 Authentication:** User registration, login, profile management, and secure password changes.
+- **👥 Social Graph:** Follow/unfollow mechanics and intelligent user follow suggestions.
+- **📰 Feed & Post Engine:** Fetch comprehensive feeds featuring nested reposts, threaded comments, likes, and bookmark states. Create, like, bookmark, and repost content.
+- **💬 Threaded Comments:** Robust commenting system supporting multi-level nested replies.
+- **🔔 Notifications:** Comprehensive event tracking (likes, comments, replies, follows, and reposts). Fetch, create, mark as read, or clear notifications.
+- **📈 Trends Engine:** Automatic detection and categorization of trending hashtags across network posts.
 
-If you want a one-command setup for local development, you can use the composer script:
+---
+
+## ⚙️ Prerequisites
+
+Ensure your local development environment meets the following requirements:
+
+- **PHP:** 8.3 or higher
+- **Composer:** Dependency manager for PHP
+- **Node.js & npm:** Node 18+ recommended
+- **Database:** SQLite, MySQL, or PostgreSQL
+
+---
+
+## 🚀 Getting Started
+
+### Quick Setup
+
+For a streamlined local development setup, you can use our single-command installation script:
 
 ```bash
 composer run setup
 ```
 
----
+**Alternatively, to set up manually step-by-step:**
 
-## Environment configuration
+```bash
+cd /home/zypp/code/aether-social-workspace/social-app-backend
+composer install
+npm install
 
-Update `.env` for your environment, for example:
+cp .env.example .env
+php artisan key:generate
+
+# Note: If using SQLite, create the file first: touch database/database.sqlite
+php artisan migrate
+npm run build
+```
+
+### Environment Configuration
+
+Update your `.env` file to match your environment variables. Here is a recommended local configuration:
 
 ```env
 APP_NAME="Aether Social"
@@ -73,34 +93,26 @@ APP_KEY=base64:...
 APP_DEBUG=true
 APP_URL=http://127.0.0.1:8000
 
+# Database setup (SQLite example)
 DB_CONNECTION=sqlite
 DB_DATABASE=/absolute/path/to/database/database.sqlite
 
+# API & Session Drivers
 SANCTUM_STATEFUL_DOMAINS=127.0.0.1
 SESSION_DRIVER=file
 CACHE_DRIVER=file
 QUEUE_CONNECTION=sync
 ```
 
-If using SQLite, create the database file before running migrations:
+### Running Locally
 
-```bash
-touch database/database.sqlite
-```
-
----
-
-## Running locally
-
-Start the backend and asset pipeline:
+To start the backend, Vite dev server, queue listener, and log watcher simultaneously:
 
 ```bash
 composer run dev
 ```
 
-This launches a local Laravel server, Vite dev server, queue listener, and log watcher.
-
-For a simple backend-only start:
+If you only need to boot up the backend API:
 
 ```bash
 php artisan serve
@@ -108,103 +120,94 @@ php artisan serve
 
 ---
 
-## API overview
+## 📡 API Reference
 
-All routes are prefixed with `/api`.
+*Note: All endpoints are prefixed with `/api`.*
 
-### Public routes
+### 🌍 Public Routes
 
-- `POST /api/auth/register` — register a new user
-- `POST /api/auth/login` — login and receive a Sanctum token
-- `GET /api/users/profile/{username}` — fetch public profile data
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register a new user |
+| `POST` | `/api/auth/login` | Login and receive a Sanctum token |
+| `GET`  | `/api/users/profile/{username}`| Fetch public profile data |
 
-### Protected routes (require `Authorization: Bearer <token>`)
+### 🔒 Protected Routes 
+*(Requires `Authorization: Bearer <token>` header)*
 
-#### Auth
-- `GET /api/auth/me` — current user profile
-- `PUT /api/auth/update` — update user profile
-- `PUT /api/auth/change-password` — update password
+**Authentication & Profile**
+- `GET /api/auth/me` — Retrieve current user profile
+- `PUT /api/auth/update` — Update user profile details
+- `PUT /api/auth/change-password` — Update user password
 
-#### User social actions
-- `POST /api/users/{username}/follow` — follow / unfollow a user
-- `GET /api/users/suggestions` — suggested users to follow
+**Social Actions**
+- `POST /api/users/{username}/follow` — Toggle follow/unfollow a user
+- `GET /api/users/suggestions` — Retrieve suggested users to follow
 
-#### Feed and posts
-- `GET /api/posts` — list feed posts
-- `POST /api/posts` — create a new post
-- `POST /api/posts/{id}/like` — toggle like
-- `POST /api/posts/{id}/bookmark` — toggle bookmark
-- `POST /api/posts/{id}/repost` — toggle repost
-- `GET /api/bookmarks` — list bookmarked posts
+**Feed & Posts**
+- `GET /api/posts` — List paginated feed posts
+- `POST /api/posts` — Create a new post
+- `POST /api/posts/{id}/like` — Toggle post like
+- `POST /api/posts/{id}/bookmark` — Toggle post bookmark
+- `POST /api/posts/{id}/repost` — Toggle repost status
+- `GET /api/bookmarks` — List user's bookmarked posts
 
-#### Comments
-- `POST /api/comments` — add a comment or reply
+**Comments**
+- `POST /api/comments` — Add a comment or reply to an existing thread
 
-#### Notifications
-- `GET /api/notifications` — list notifications
-- `POST /api/notifications` — create a notification
-- `PUT /api/notifications/mark-read` — mark one or all notifications as read
-- `DELETE /api/notifications` — clear all notifications
-- `DELETE /api/notifications/{id}` — delete a single notification
+**Notifications**
+- `GET /api/notifications` — List user notifications
+- `POST /api/notifications` — Trigger a new notification
+- `PUT /api/notifications/mark-read` — Mark a specific (or all) notifications as read
+- `DELETE /api/notifications/{id}` — Delete a single notification
+- `DELETE /api/notifications` — Clear all notifications
 
-#### Trends
-- `GET /api/trends` — trending hashtags with categories
+**Discover**
+- `GET /api/trends` — Fetch trending hashtags alongside categories
+
+### Example Request
+
+**1. Authenticate**
+```bash
+curl -X POST http://127.0.0.1:8000/api/auth/login   -H "Content-Type: application/json"   -d '{"email":"user@example.com","password":"secret"}'
+```
+
+**2. Fetch Data**
+```bash
+curl http://127.0.0.1:8000/api/posts   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
 
 ---
 
-## Example request
+## 🗄 Database Architecture
 
-```bash
-curl -X POST http://127.0.0.1:8000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","password":"secret"}'
-```
+The backend is designed as an API-first engine. Core models and tables include:
 
-Use the returned token for protected requests:
-
-```bash
-curl http://127.0.0.1:8000/api/posts \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-```
-
----
-
-## Database schema
-
-Core tables include:
-- `users`
-- `posts`
-- `comments`
-- `likes`
-- `bookmarks`
-- `follows`
+- `users` / `follows`
+- `posts` / `likes` / `bookmarks`
+- `comments` 
 - `notifications`
 
-The project supports:
-- reposts via `original_post_id` and `is_retransmission`
-- nested comment replies via `parent_id`
-- user-to-user follow relationships
-- notification events for likes, comments, replies, follows, and reposts
+**Architectural Highlights:**
+- **Reposts:** Handled natively via `original_post_id` and `is_retransmission` flags.
+- **Nested Replies:** Comments support infinite threading via `parent_id`.
+- **Event-Driven:** Notification events automatically fire for likes, comments, replies, follows, and reposts.
 
 ---
 
-## Development commands
+## 💻 Development Commands
 
-- `composer run setup` — install dependencies, generate key, migrate, build assets
-- `composer run dev` — start dev environment
-- `composer run test` — execute PHPUnit tests
-- `npm run build` — compile frontend assets
+Here are the custom composer commands available to speed up your workflow:
 
----
-
-## Notes
-
-- Laravel Sanctum secures all protected API endpoints.
-- Filament is installed and ready for admin panel support.
-- The backend is designed as an API-first social app engine.
+| Command | Action |
+|---|---|
+| `composer run setup` | Installs dependencies, generates key, migrates DB, and builds assets. |
+| `composer run dev` | Boots up the full local development environment. |
+| `composer run test` | Executes the PHPUnit test suite. |
+| `npm run build` | Compiles frontend assets for production. |
 
 ---
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is open-sourced software licensed under the [MIT License](LICENSE).
